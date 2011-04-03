@@ -14,6 +14,7 @@ ArrayList bubbles;                  //  Creates an ArrayList to hold the Bubble 
 PImage bubblePNG;                   //  Creates a PImage that will hold the image of the bubble
 PImage fishImg;
 
+
 void setup(){
 	size ( 640, 480 );                      //  Window size of 640 x 480
 	opencv = new OpenCV( this );            //  Initialises the OpenCV library
@@ -32,7 +33,10 @@ void youareloud(){
         fft.forward(in.mix);
         for(int i=0; i<fft.avgSize();i++){
           if(fft.getAvg(i) > 3){
-            bubbles.add(new Bubble( (int)random( 0, width - 40), 480, ((bubblePNG.width)/10), ((bubblePNG.height)/10)));   //  Adds a new bubble to the array with a random x position
+
+
+
+            bubbles.add(new Bubble( (int)random( 0, width - 40), 480, (int)random(10,25), (int)random(10,25)));   //  Adds a new bubble to the array with a random x position
           }  
         }
         for ( int i = 0; i < bubbles.size(); i++ ){    //  For every bubble in the bubbles array
@@ -50,12 +54,13 @@ void youareloud(){
 }
 
 void draw(){
-        background(loadImage("/Users/josepilove/Dropbox/Team Fesco/video proto/underwater_640x480_stretched.jpg"));//drwa detected environemtn
+        background(loadImage("data/underwater_640x480_stretched.jpg"));//drwa detected environemtn
         youareloud();
 }
 class Bubble{
 	int bubbleX, bubbleY, bubbleWidth, bubbleHeight;    //Some variables to hold information about the bubble
-	Bubble ( int bX, int bY, int bW, int bH ){           //The class constructor- sets the values when a new bubble object is made
+	int randSize = (int)random(10, 20);
+        Bubble ( int bX, int bY, int bW, int bH ){           //The class constructor- sets the values when a new bubble object is made
    		bubbleX = bX;
    		bubbleY = bY;
    		bubbleWidth = bW;
@@ -88,7 +93,8 @@ class Bubble{
      		if (bubbleY < 0){               //  If the bubble has dropped off of the bottom of the screen
        			return 1;                       //  Return '1' so that the bubble object is destroyed
                 }
-	        image(bubblePNG, bubbleX, bubbleY,10,10);    //  Draws the bubble to the screen
+
+                image(bubblePNG, bubbleX, bubbleY,randSize,randSize);    //  Draws the bubble to the screen
      	        return 0;                              //  Returns '0' so that the bubble isn't destroyed
 	}
 
