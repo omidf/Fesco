@@ -1,7 +1,14 @@
 import hypermedia.video.*;          //  Imports the OpenCV library
 import java.awt.Rectangle;
+import ddf.minim.analysis.*;
+import ddf.minim.*;
 
 OpenCV opencv;                      //  Creates a new OpenCV object
+Minim minim;
+AudioInput in;
+FFT fft;
+int w;
+PImage fade;
 PImage movementImg;                 //  Creates a new PImage to hold the movement image
 ArrayList bubbles;                  //  Creates an ArrayList to hold the Bubble objects
 PImage bubblePNG;                   //  Creates a PImage that will hold the image of the bubble
@@ -14,10 +21,20 @@ void setup(){
 	bubbles = new ArrayList();              //  Initialises the ArrayList
 	bubblePNG = loadImage("bubble.png");    //  Load the bubble image into memory
 	smooth();
+//Sound stuff
+        minim = new Minim(this);
+        in = minim.getLineIn(Minim.STEREO, 512);
+        fft = new FFT(in.bufferSize(),in.sampleRate());
+        fft.logAverages(60,7);
 
 }
 void youareloud(){
-        bubbles.add(new Bubble( (int)random( 0, width - 40), 480, ((bubblePNG.width)/10), ((bubblePNG.height)/10)));   //  Adds a new bubble to the array with a random x position
+        fft.forward(in.mix);
+        for(int i=0; i<fft.avgSize();i++){
+          if(fft.getAvg(i) > 3){
+            bubbles.add(new Bubble( (int)random( 0, width - 40), 480, ((bubblePNG.width)/10), ((bubblePNG.height)/10)));   //  Adds a new bubble to the array with a random x position
+          }  
+        }
         for ( int i = 0; i < bubbles.size(); i++ ){    //  For every bubble in the bubbles array
 		Bubble _bubble = (Bubble) bubbles.get(i);    //  Copies the current bubble into a temporary object
 		if(_bubble.update() == 1){                  //  If the bubble's update function returns '1'
